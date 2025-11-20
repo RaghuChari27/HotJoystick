@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hot Joystick's Game Store - Admin</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0b0b0b;
+      color: #f0f0f0;
+    }
+
+    a {
+      text-decoration: none;
+      color: white;
+    }
+
+    nav {
+      background-color: #1b2838;
+      padding: 15px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.6em;
+      color: #66c0f4;
+      font-weight: bold;
+    }
+
+    .nav-links a {
+      margin: 0 15px;
+      color: #c7d5e0;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      color: #66c0f4;
+    }
+
+    
+    .store-content {
+            display: block;
+    }
+
+    .hero {
+      background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0.4)),
+                  url('bgmi.jpg') center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    .hero h1 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+      color: #ddd;
+    }
+
+    .hero button {
+      background-color: #66c0f4;
+      color: #0b0b0b;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 5px;
+      font-size: 1em;
+      margin-top: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .hero button:hover {
+      background-color: #8ed4ff;
+    }
+
+    .games-section {
+      padding: 50px 30px;
+      background-color: #16202d;
+    }
+
+    .games-section h2, .games-section h3 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #66c0f4;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 30px;
+      justify-items: center;
+    }
+
+    .game-card {
+      background-color: #1b2838;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(102, 192, 244, 0.5);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .game-info {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .game-info h3 {
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      margin-bottom: 10px;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: #888;
+      margin-right: 10px;
+    }
+
+    .discount {
+      color: #66c0f4;
+      font-weight: bold;
+    }
+
+    .buy-btn {
+      background-color: #66c0f4;
+      border: none;
+      color: #0b0b0b;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .buy-btn:hover {
+      background-color: #8ed4ff;
+    }
+
+    
+    .admin-page {
+      display: none; 
+      padding: 50px 30px;
+      background-color: #1b2838;
+      min-height: 100vh;
+    }
+
+    .admin-page h2 {
+      color: #66c0f4;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .admin-dashboard {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .admin-table th, .admin-table td {
+      border: 1px solid #334257;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .admin-table th {
+      background-color: #16202d;
+      color: #c7d5e0;
+      font-weight: bold;
+    }
+
+    .admin-table tr:nth-child(even) {
+      background-color: #1f3044;
+    }
+
+    .admin-table tr:hover {
+      background-color: #2a3c50;
+    }
+
+    .admin-action-btn {
+      padding: 5px 10px;
+      margin-right: 5px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .edit-btn {
+      background-color: #ffc107;
+      color: #0b0b0b;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .add-product-form {
+      background-color: #16202d;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .add-product-form input[type="text"],
+    .add-product-form input[type="number"] {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #334257;
+      background-color: #0b0b0b;
+      color: #f0f0f0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .add-product-form button {
+      align-self: flex-start;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    
+    .show-admin .store-content, .show-admin footer {
+      display: none;
+    }
+    .show-admin .admin-page {
+      display: block;
+    }
+
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #1b2838;
+      color: #c7d5e0;
+      font-size: 0.9em;
+    }
+  </style>
+  <script>
+    function toggleAdminView() {
+        document.body.classList.toggle('show-admin');
+        const adminLink = document.getElementById('adminLink');
+        if (document.body.classList.contains('show-admin')) {
+          adminLink.textContent = 'Back to Store';
+        } else {
+          adminLink.textContent = 'Admin Panel';
+        }
+    }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">HOT JOYSTICK 🎮</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">Store</a>
+      <a href="#">Offers</a>
+      <a href="#" id="adminLink" onclick="toggleAdminView()">Admin Panel</a>
+      <a href="#">Contact</a>
+    </div>
+  </nav>
+
+  <div class="store-content">
+    <section class="hero">
+      <h1>🔥 Big November Sale!</h1>
+      <p>Grab your favorite games at up to <strong>50% OFF</strong> — limited time only!</p>
+      <button>Shop Now</button>
+    </section>
+
+    <section class="games-section">
+      <h2>Featured Games</h2>
+      <div class="game-grid">
+
+        <div class="game-card">
+          <img src="images/ff.jpg" alt="Free Fire">
+          <div class="game-info">
+            <h3>Free Fire Max</h3>
+            <p class="price"><span class="old-price">₹999</span> ₹699 <span class="discount">(30% OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/bgmi.jpg" alt="BGMI" />
+          <div class="game-info">
+            <h3>BGMI (Battlegrounds Mobile India)</h3>
+            <p class="price"><span class="old-price">₹1499</span> ₹1049 <span class="discount">(20% OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/black myth.jpg" alt="Black Myth Wukong">
+          <div class="game-info">
+            <h3>Black Myth: Wukong</h3>
+            <p class="price"><span class="old-price">₹2999</span> ₹2399 <span class="discount">(30% OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/minecraft.jpg" alt="minecraft">
+          <div class="game-info">
+            <h3>Minecraft</h3>
+            <p class="price"><span class="old-price">₹2999</span> ₹1499 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/ghost.jpg" alt="ghost">
+          <div class="game-info">
+            <h3>Ghost Of Tsushima</h3>
+            <p class="price"><span class="old-price">₹1500</span> ₹1000 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/miles.jpg" alt="miles">
+          <div class="game-info">
+            <h3>Miles Moralis</h3>
+            <p class="price"><span class="old-price">₹999</span> ₹499 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/fortnite.jpg" alt="fortnite">
+          <div class="game-info">
+            <h3> Fortnite</h3>
+            <p class="price"><span class="old-price">₹299</span> ₹159 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/god of war.jpg" alt="god of war">
+          <div class="game-info">
+            <h3>God Of War</h3>
+            <p class="price"><span class="old-price">₹2999</span> ₹2599 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/valorant.jpg" alt="valorant">
+          <div class="game-info">
+            <h3> Valorant</h3>
+            <p class="price"><span class="old-price">₹1899</span> 899 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <img src="images/elder ring.jpg" alt="elder ring">
+          <div class="game-info">
+            <h3> Elder Ring</h3>
+            <p class="price"><span class="old-price">₹1199</span> ₹599 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="games-section">
+      <h3>Racing Games</h3>
+      <div class="game-grid">
+        <div class="game-card">
+          <img src="images/froza horizon.jpeg" alt="Froza Horizon">
+          <div class="game-info">
+            <h3> Froza Horizon Street Racing</h3>
+            <p class="price"><span class="old-price">₹1199</span> ₹599 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+        <div class="game-card">
+          <img src="images/froza.jpg" alt="Froza">
+          <div class="game-info">
+            <h3>Froza</h3>
+            <p class="price"><span class="old-price">₹1199</span> ₹599 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+        <div class="game-card">
+          <img src="images/asphalt 9.jpeg" alt="Asphalt 9">
+          <div class="game-info">
+            <h3> Asphalt 9</h3>
+            <p class="price"><span class="old-price">₹1199</span> ₹599 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+        <div class="game-card">
+          <img src="images/nfs.jpeg" alt="Need For Speed">
+          <div class="game-info">
+            <h3>Need For Speed</h3>
+            <p class="price"><span class="old-price">₹1199</span> ₹599 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+        <div class="game-card">
+          <img src="images/sonic racing.jpeg" alt="Sonic Racing">
+          <div class="game-info">
+            <h3>Sonic Racing</h3>
+            <p class="price"><span class="old-price">₹1199</span> ₹599 <span class="discount">(20%  OFF)</span></p>
+            <button class="buy-btn">Buy Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="admin-page">
+    <div class="admin-dashboard">
+      <h2>🔑 Admin Dashboard - Product Management</h2>
+      <p>Welcome,Raghunath . Use this panel to manage game listings.</p>
+
+      <div class="add-product-form">
+        <h3>➕ Add New Product</h3>
+        <input type="text" placeholder="Game Name">
+        <input type="number" placeholder="Regular Price (e.g., 2999)">
+        <input type="number" placeholder="Discounted Price (e.g., 2399)">
+        <input type="text" placeholder="Image URL (e.g., images/newgame.jpg)">
+        <button>Add Product</button>
+      </div>
+
+      <h3>📝 Current Game Listings</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Regular Price</th>
+            <th>Sale Price</th>
+            <th>Discount %</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>101</td>
+            <td>Free Fire Max</td>
+            <td>₹999</td>
+            <td>₹699</td>
+            <td>30%</td>
+            <td>
+              <button class="admin-action-btn edit-btn">Edit</button>
+              <button class="admin-action-btn delete-btn">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>102</td>
+            <td>BGMI</td>
+            <td>₹1499</td>
+            <td>₹1049</td>
+            <td>20%</td>
+            <td>
+              <button class="admin-action-btn edit-btn">Edit</button>
+              <button class="admin-action-btn delete-btn">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>103</td>
+            <td>Black Myth: Wukong</td>
+            <td>₹2999</td>
+            <td>₹2399</td>
+            <td>30%</td>
+            <td>
+              <button class="admin-action-btn edit-btn">Edit</button>
+              <button class="admin-action-btn delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top: 30px; text-align: center;">... (More games would be listed here) ...</p>
+    </div>
+  </section>
+  <footer>© 2025 Hot Joystick's Game Store | Powered by Passion for Gaming ❤️</footer>
+
+</body>
+</html>
